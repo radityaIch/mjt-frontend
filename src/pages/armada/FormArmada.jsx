@@ -23,6 +23,7 @@ import {
 import Widget from "../../components/Widget/Widget.js";
 
 import s from "../components/Tables.module.scss";
+import { useCallback } from "react";
 
 const FormArmada = function () {
   let history = useHistory();
@@ -69,15 +70,18 @@ const FormArmada = function () {
     setImagePreview([]);
   };
 
-  const getArmadaData = async (id) => {
-    const res = await getArmadaById(id);
-    setState(res, () => {
-      const copyState = res;
-      delete copyState.image;
-      setState({ ...copyState });
-    });
-    setOldImage(res.image);
-  };
+  const getArmadaData = useCallback(
+    async (id) => {
+      const res = await getArmadaById(id);
+      setState(res, () => {
+        const copyState = res;
+        delete copyState.image;
+        setState({ ...copyState });
+      });
+      setOldImage(res.image);
+    },
+    [setState]
+  );
 
   const onSubmitHandler = (e) => {
     e.preventDefault();
@@ -132,7 +136,7 @@ const FormArmada = function () {
     if (id) {
       getArmadaData(id);
     }
-  }, []);
+  }, [getArmadaData, id]);
 
   return (
     <div>

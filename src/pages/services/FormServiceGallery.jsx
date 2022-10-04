@@ -19,6 +19,8 @@ import {
   getServiceGalleryById,
   updateServiceGallery,
 } from "../../api/ServicesAPI.js";
+import { useCallback } from "react";
+import { useMemo } from "react";
 
 const FormServiceGallery = function () {
   let history = useHistory();
@@ -33,19 +35,29 @@ const FormServiceGallery = function () {
   const [imagePreview, setImagePreview] = useState([]);
   const [oldImage, setOldImage] = useState();
 
-  const options = [
-    { value: "shipping", label: "Shipping" },
-    { value: "warehouse_fulfillment", label: "Warehouse & Fulfillment" },
-  ];
+  const options = useMemo(
+    () => [
+      { value: "shipping", label: "Shipping" },
+      { value: "warehouse_fulfillment", label: "Warehouse & Fulfillment" },
+    ],
+    []
+  );
 
-  const getDefaultSelectedOptions = (data) => {
-    let res = {};
-    options?.map((option, index) => {
-      if (option.value === data) res = options[index];
-    });
-    setDefaultSelected(res);
-    return res;
-  };
+  const getDefaultSelectedOptions = useCallback(
+    (data) => {
+      let res = {};
+      options?.map((option, index) => {
+        if (option.value === data) {
+          res = options[index];
+        }
+        // useles return
+        return [];
+      });
+      setDefaultSelected(res);
+      return res;
+    },
+    [options]
+  );
 
   const onChangeImage = (imageList, _addUpdateIndex) => {
     if (imageList[0].file.size <= 2097152) {
@@ -67,12 +79,15 @@ const FormServiceGallery = function () {
     setImagePreview([]);
   };
 
-  const getServiceGallery = async (id) => {
-    const res = await getServiceGalleryById(id);
-    setState(res);
-    getDefaultSelectedOptions(res.type);
-    setOldImage(res.image);
-  };
+  const getServiceGallery = useCallback(
+    async (id) => {
+      const res = await getServiceGalleryById(id);
+      setState(res);
+      getDefaultSelectedOptions(res.type);
+      setOldImage(res.image);
+    },
+    [getDefaultSelectedOptions, setState]
+  );
 
   const onSubmitHandler = (e) => {
     e.preventDefault();
@@ -127,7 +142,7 @@ const FormServiceGallery = function () {
     if (id) {
       getServiceGallery(id);
     }
-  }, []);
+  }, [getServiceGallery, id]);
 
   return (
     <div>

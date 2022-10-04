@@ -20,6 +20,7 @@ import Widget from "../../components/Widget/Widget.js";
 import Select from "react-select";
 
 import s from "../components/Tables.module.scss";
+import { useCallback } from "react";
 
 const FormPriceList = function () {
   let history = useHistory();
@@ -68,7 +69,7 @@ const FormPriceList = function () {
     setImagePreview([]);
   };
 
-  const getPriceData = async (id) => {
+  const getPriceData = useCallback(async (id) => {
     const res = await getPriceListById(id);
     setState(res, () => {
       const copyState = res;
@@ -77,7 +78,7 @@ const FormPriceList = function () {
       setState({ ...copyState });
     });
     setOldImage(res.image);
-  };
+  }, [setState]);
 
   const onSubmitHandler = (e) => {
     e.preventDefault();
@@ -132,7 +133,7 @@ const FormPriceList = function () {
     if (id) {
       getPriceData(id);
     }
-  }, []);
+  }, [getPriceData, id]);
 
   return (
     <div>

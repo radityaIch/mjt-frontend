@@ -25,6 +25,7 @@ import Widget from "../../components/Widget/Widget.js";
 
 import s from "../components/Tables.module.scss";
 import { getAllClients } from "../../api/ClientsAPI.js";
+import { useCallback } from "react";
 
 const FormArticle = function () {
   let history = useHistory();
@@ -108,37 +109,47 @@ const FormArticle = function () {
     }
   };
 
-  const getArticlesData = async (id) => {
-    const res = await getArticleById(id);
-    setOldImage(res.image);
-    setOldImageGallery(res.gallery);
-    const copyState = res;
-    delete copyState.image;
-    delete copyState.gallery;
-    if (res.client_id === null) delete copyState.client_id;
-    setState({ ...copyState });
-  };
+  const getArticlesData = useCallback(
+    async (id) => {
+      const res = await getArticleById(id);
+      setOldImage(res.image);
+      setOldImageGallery(res.gallery);
+      const copyState = res;
+      delete copyState.image;
+      delete copyState.gallery;
+      if (res.client_id === null) delete copyState.client_id;
+      setState({ ...copyState });
+    },
+    [setState]
+  );
 
   const getArticleGalleryData = async (id) => {
     const res = await getArticleGalleryById(id);
+    return res;
   };
 
-  const getClients = async () => {
+  const getDefaultClient = useCallback(() => {
+    clientOptions?.map((client, index) => {
+      if (client.value === state.client.id) {
+        return index;
+      }else {
+        return null;
+      }
+    });
+  }, [clientOptions, state.client.id]);
+
+  const getClients = useCallback(async () => {
     const res = await getAllClients();
     let options = [];
     res?.map((client) => {
       options = [...options, { value: client.id, label: client.title }];
+      // this is useless return
+      return client;
     });
     setClientOptions(options, () => {
       getDefaultClient();
     });
-  };
-
-  const getDefaultClient = () => {
-    clientOptions?.map((client, index) => {
-      if (client.value === state.client.id) return index;
-    });
-  };
+  }, [getDefaultClient, setClientOptions]);
 
   const onSubmitHandler = (e) => {
     e.preventDefault();
@@ -219,7 +230,7 @@ const FormArticle = function () {
       getArticleGalleryData(id);
     }
     getClients();
-  }, []);
+  }, [getArticlesData, getClients, id]);
 
   return (
     <div>
@@ -438,7 +449,7 @@ const FormArticle = function () {
                               <div className="image-item mx-2" key={index}>
                                 <img
                                   src={image.image}
-                                  alt="image"
+                                  alt={image.i}
                                   width="250"
                                 />
                               </div>

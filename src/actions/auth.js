@@ -2,7 +2,7 @@ import { loginUserAccount } from "../api/AuthAPI";
 import { toast } from "react-toastify";
 import Notification from "../components/Notification/Notification";
 import { notificationOptions } from "../components/utils/utils";
-import { getLoggedUser } from "../api/UserAPI";
+// import { getLoggedUser } from "../api/UserAPI";
 
 export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
 export const LOGIN_FAILURE = "LOGIN_FAILURE";

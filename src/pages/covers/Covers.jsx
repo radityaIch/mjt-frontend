@@ -2,9 +2,9 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import { getAllCovers } from "../../api/LandingAPI.js";
-import { toast } from "react-toastify";
-import { notificationOptions } from "../../components/utils/utils.js";
-import Notification from "../../components/Notification/Notification.js";
+// import { toast } from "react-toastify";
+// import { notificationOptions } from "../../components/utils/utils.js";
+// import Notification from "../../components/Notification/Notification.js";
 import {
   Col,
   Row,

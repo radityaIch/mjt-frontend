@@ -19,6 +19,7 @@ import { Col, Row, Button, FormGroup, FormText, Input } from "reactstrap";
 import Widget from "../../components/Widget/Widget.js";
 
 import s from "../components/Tables.module.scss";
+import { useCallback } from "react";
 
 const FormClient = function () {
   let history = useHistory();
@@ -60,7 +61,7 @@ const FormClient = function () {
     setImagePreview([]);
   };
 
-  const getClientsData = async (id) => {
+  const getClientsData = useCallback(async (id) => {
     const res = await getClientById(id);
     setState(res, () => {
       const copyState = res;
@@ -68,7 +69,7 @@ const FormClient = function () {
       setState({ ...copyState });
     });
     setOldImage(res.image);
-  };
+  }, [setState]);
 
   const onSubmitHandler = (e) => {
     e.preventDefault();
@@ -123,7 +124,7 @@ const FormClient = function () {
     if (id) {
       getClientsData(id);
     }
-  }, []);
+  }, [getClientsData, id]);
 
   return (
     <div>

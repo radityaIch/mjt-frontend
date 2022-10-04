@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useHistory, useParams } from "react-router";
+import { useHistory } from "react-router";
 import { useStateWithCallbackLazy } from "use-state-with-callback";
 import {
   addArea,
@@ -19,6 +19,7 @@ import { Col, Row, Button, FormGroup, FormText, Input } from "reactstrap";
 import Widget from "../../components/Widget/Widget.js";
 
 import s from "../components/Tables.module.scss";
+import { useCallback } from "react";
 
 const FormArea = function () {
   let history = useHistory();
@@ -41,20 +42,23 @@ const FormArea = function () {
     setState({ ...state, [event.target.name]: event.target.value });
   };
 
-  const getAreasData = async (id) => {
-    let res = "";
-    if (id && id !== "semua-kota") {
-      res = await getAreaById(id);
-      setState(res);
-    } else {
-      res = await getAllAreas();
-      setState(res, () => {
-        const mapCities = res?.map((city) => city.title);
-        const strCities = mapCities.join("");
-        setCities(strCities);
-      });
-    }
-  };
+  const getAreasData = useCallback(
+    async (id) => {
+      let res = "";
+      if (id && id !== "semua-kota") {
+        res = await getAreaById(id);
+        setState(res);
+      } else {
+        res = await getAllAreas();
+        setState(res, () => {
+          const mapCities = res?.map((city) => city.title);
+          const strCities = mapCities.join("");
+          setCities(strCities);
+        });
+      }
+    },
+    [setCities, setState]
+  );
 
   const onSubmitHandler = (e) => {
     e.preventDefault();
@@ -109,7 +113,7 @@ const FormArea = function () {
     if (id) {
       getAreasData(id);
     }
-  }, []);
+  }, [getAreasData, id]);
 
   return (
     <div>

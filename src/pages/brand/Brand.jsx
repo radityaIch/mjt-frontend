@@ -14,6 +14,7 @@ import Widget from "../../components/Widget/Widget.js";
 
 import s from "../components/Tables.module.scss";
 import { getBrand, updateBrand } from "../../api/BrandAPI.js";
+import { useCallback } from "react";
 
 const Brand = function () {
     const [state, setState] = useStateWithCallbackLazy({
@@ -73,7 +74,7 @@ const Brand = function () {
         }
     };
 
-    const getBrandData = async () => {
+    const getBrandData = useCallback(async () => {
         const res = await getBrand()
         setState(res, () => {
             const copyState = res;
@@ -82,7 +83,7 @@ const Brand = function () {
             setState({ ...copyState });
         });
         setOldImage({ logo_dark: res.logo_dark, logo_light: res.logo_light });
-    };
+    }, [setState]);
 
     const onSubmitHandler = (e) => {
         e.preventDefault();
@@ -116,7 +117,7 @@ const Brand = function () {
 
     useEffect(() => {
         getBrandData();
-    }, []);
+    }, [getBrandData]);
 
     return (
         <div>

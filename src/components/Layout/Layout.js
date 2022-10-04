@@ -1,5 +1,5 @@
 // -- React and related libs
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { Switch, Route, withRouter, Redirect } from "react-router";
 
@@ -54,26 +54,30 @@ const Layout = (props) => {
   const userLevel = parseInt(localStorage.getItem("level"));
   const [userData, setUserData] = useState();
 
-  const doLogout = () => {
+  const doLogout = useCallback(() => {
     props.dispatch(logoutUser());
-  };
+  }, [props])
 
-  useEffect(async () => {
-    const response = await getLoggedUser();
-    setUserData(response.data.data);
-    if (response.status === 401) {
-      doLogout();
-      if (response.data.message === "Unauthorized")
-        toast(
-          <Notification
-            type="warning"
-            message="Sesi telah habis! Mohon login kembali"
-            withIcon
-          />,
-          notificationOptions
-        );
+  useEffect(() => {
+    async function isLoggedIn() {
+      const response = await getLoggedUser();
+      setUserData(response.data.data);
+      if (response.status === 401) {
+        if (response.data.message === "Unauthorized")
+          toast(
+            <Notification
+              type="warning"
+              message="Sesi telah habis! Mohon login kembali"
+              withIcon
+            />,
+            notificationOptions
+          );
+
+        doLogout();
+      }
     }
-  }, []);
+    isLoggedIn()
+  }, [doLogout]);
 
   return (
     <div className={s.root}>
@@ -255,18 +259,10 @@ const Layout = (props) => {
             />
 
             {/* Brand Settings Routes */}
-            <Route
-              path="/dashboard/brand"
-              exact
-              component={Brand}
-            />
+            <Route path="/dashboard/brand" exact component={Brand} />
 
             {/* Pros Routes */}
-            <Route
-              path="/dashboard/pros"
-              exact
-              component={Pros}
-            />
+            <Route path="/dashboard/pros" exact component={Pros} />
             <Route
               path="/dashboard/pros/tambah-pros"
               exact

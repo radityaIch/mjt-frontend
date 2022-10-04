@@ -18,6 +18,7 @@ import { Col, Row, Button, FormGroup, FormText, Input } from "reactstrap";
 import Widget from "../../components/Widget/Widget.js";
 
 import s from "../components/Tables.module.scss";
+import { useCallback } from "react";
 
 const FormMission = (props) => {
   let history = useHistory();
@@ -37,14 +38,14 @@ const FormMission = (props) => {
     setMissions({ ...missions, [event.target.name]: event.target.value });
   };
 
-  const getMissions = async () => {
+  const getMissions = useCallback(async () => {
     const res = await getAllMissions();
     setState({ ...state, misi: res }, () => {
       const mapMissions = res?.map((mission) => mission.misi);
       const strMissions = mapMissions.join("");
       setMissions({ ...missions, misi: strMissions });
     });
-  };
+  }, [missions, setMissions, setState, state]);
 
   const onSubmitHandler = (e) => {
     e.preventDefault();
@@ -99,7 +100,7 @@ const FormMission = (props) => {
     if (id) {
       getMissions(id);
     }
-  }, []);
+  }, [getMissions, id]);
 
   return (
     <div>

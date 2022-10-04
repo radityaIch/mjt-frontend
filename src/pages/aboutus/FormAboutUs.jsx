@@ -19,6 +19,7 @@ import { Col, Row, Button, FormGroup, FormText, Input } from "reactstrap";
 import Widget from "../../components/Widget/Widget.js";
 
 import s from "../components/Tables.module.scss";
+import { useCallback } from "react";
 
 const FormAboutUs = (props) => {
   let history = useHistory();
@@ -67,13 +68,13 @@ const FormAboutUs = (props) => {
     }
   };
 
-  const getAboutUsData = async (id) => {
+  const getAboutUsData = useCallback(async (id) => {
     const res = await getAboutUsById(id);
     const newRes = res;
     delete newRes.image_1;
     delete newRes.image_2;
     setState(newRes);
-  };
+  }, [setState]);
 
   const onSubmitHandler = (e) => {
     e.preventDefault();
@@ -128,7 +129,7 @@ const FormAboutUs = (props) => {
     if (id) {
       getAboutUsData(id);
     }
-  }, []);
+  }, [getAboutUsData, id]);
 
   return (
     <div>

@@ -19,6 +19,7 @@ import { Col, Row, Button, FormGroup, FormText } from "reactstrap";
 import Widget from "../../components/Widget/Widget.js";
 
 import s from "../components/Tables.module.scss";
+import { useCallback } from "react";
 
 const FormPhoto = function () {
   let history = useHistory();
@@ -77,7 +78,7 @@ const FormPhoto = function () {
     setImagePreviewSecond([]);
   };
 
-  const getAboutUsData = async (id) => {
+  const getAboutUsData = useCallback(async (id) => {
     const res = await getAboutUsById(id);
     setState({
       visi: res.visi,
@@ -87,7 +88,7 @@ const FormPhoto = function () {
     });
     setOldImage(res.image_1);
     setOldImageSecond(res.image_2);
-  };
+  },[setState]);
 
   const onSubmitHandler = (e) => {
     e.preventDefault();
@@ -142,7 +143,7 @@ const FormPhoto = function () {
     if (id) {
       getAboutUsData(id);
     }
-  }, []);
+  }, [getAboutUsData, id]);
 
   return (
     <div>

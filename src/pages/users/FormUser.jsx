@@ -14,6 +14,7 @@ import { Col, Row, Button, FormGroup, FormText, Input } from "reactstrap";
 import Widget from "../../components/Widget/Widget.js";
 
 import s from "../components/Tables.module.scss";
+import { useCallback } from "react";
 
 const FormUser = function () {
   let history = useHistory();
@@ -30,10 +31,10 @@ const FormUser = function () {
     setState({ ...state, [event.target.name]: event.target.value });
   };
 
-  const getUsersData = async (id) => {
+  const getUsersData = useCallback(async (id) => {
     const res = await getUserById(id);
     setState({ name: res.name, position: res.position, level: res.level });
-  };
+  }, [setState]);
 
   const onSubmitHandler = (e) => {
     e.preventDefault();
@@ -70,7 +71,7 @@ const FormUser = function () {
     if (id) {
       getUsersData(id);
     }
-  }, []);
+  }, [getUsersData, id]);
 
   return (
     <div>

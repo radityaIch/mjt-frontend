@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useMemo, useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router";
 import { useStateWithCallbackLazy } from "use-state-with-callback";
 import {
@@ -19,6 +19,7 @@ import Widget from "../../components/Widget/Widget.js";
 import Select from "react-select";
 
 import s from "../components/Tables.module.scss";
+import { useCallback } from "react";
 
 const FormContact = function () {
   let history = useHistory();
@@ -32,31 +33,35 @@ const FormContact = function () {
   });
   const [defaultSelected, setDefaultSelected] = useState("");
 
-  const options = [
+  const options = useMemo(() => [
     { value: "call", label: "Telepon" },
     { value: "location", label: "Lokasi" },
     { value: "mail", label: "Email" },
     { value: "whatsapp", label: "Whatsapp" },
-  ];
+  ], []);
 
-  const getDefaultSelectedOptions = (data) => {
+  const getDefaultSelectedOptions = useCallback((data) => {
     let res = {};
     options?.map((option, index) => {
-      if (option.value === data) res = options[index];
+      if (option.value === data) {
+        res = options[index];
+      }
+      //useless return
+      return [];
     });
     setDefaultSelected(res);
     return res;
-  };
+  }, [options]);
 
   const changeCred = (event) => {
     setState({ ...state, [event.target.name]: event.target.value });
   };
 
-  const getContactsData = async (id) => {
+  const getContactsData = useCallback(async (id) => {
     const res = await getContactById(id);
     setState(res);
     getDefaultSelectedOptions(res.type);
-  };
+  }, [getDefaultSelectedOptions, setState]);
 
   const onSubmitHandler = (e) => {
     e.preventDefault();
@@ -115,7 +120,7 @@ const FormContact = function () {
     if (id) {
       getContactsData(id);
     }
-  }, []);
+  }, [getContactsData, id]);
 
   return (
     <div>

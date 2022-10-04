@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router";
 import { useStateWithCallbackLazy } from "use-state-with-callback";
-import { addTeam, updateTeam, getTeamById } from "../../api/TeamAPI.js";
+// import { addTeam, updateTeam, getTeamById } from "../../api/TeamAPI.js";
 import ImageUploading from "react-images-uploading";
 import {
     notificationOptions,
@@ -16,6 +16,7 @@ import Widget from "../../components/Widget/Widget.js";
 
 import s from "../components/Tables.module.scss";
 import { addPros, getProsById, updatePros } from "../../api/ProsAPI.js";
+import { useCallback } from "react";
 
 const FormPros = function () {
     let history = useHistory();
@@ -58,7 +59,7 @@ const FormPros = function () {
         setImagePreview([]);
     };
 
-    const getProsData = async (id) => {
+    const getProsData = useCallback(async (id) => {
         const res = await getProsById(id);
         setState(res, () => {
             const copyState = res;
@@ -66,7 +67,7 @@ const FormPros = function () {
             setState({ ...copyState });
         });
         setOldImage(res.image);
-    };
+    }, [setState]);
 
     const onSubmitHandler = (e) => {
         e.preventDefault();
@@ -121,7 +122,7 @@ const FormPros = function () {
         if (id) {
             getProsData(id);
         }
-    }, []);
+    }, [getProsData, id]);
 
     return (
         <div>

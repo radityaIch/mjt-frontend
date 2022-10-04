@@ -14,6 +14,7 @@ import Notification from "../../components/Notification/Notification.js";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 import { useStateWithCallbackLazy } from "use-state-with-callback";
+import { useCallback } from "react";
 
 const Profile = () => {
   const [state, setState] = useStateWithCallbackLazy({
@@ -86,7 +87,7 @@ const Profile = () => {
     setState({ ...state, [event.target.name]: event.target.value });
   };
 
-  const getUserData = async () => {
+  const getUserData = useCallback(async () => {
     const res = await getLoggedUser();
     setState(res.data.data, () => {
       const copyState = res.data.data;
@@ -94,11 +95,11 @@ const Profile = () => {
       setState({ ...copyState });
     });
     setOldImage(res.data.data.image);
-  };
+  }, [setState]);
 
   useEffect(() => {
     getUserData();
-  }, []);
+  }, [getUserData]);
 
   return (
     <div>

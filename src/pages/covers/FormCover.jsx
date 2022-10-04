@@ -13,9 +13,10 @@ import Swal from "sweetalert2";
 
 import { Col, Row, Button, FormGroup, FormText } from "reactstrap";
 import Widget from "../../components/Widget/Widget.js";
-import Select from "react-select";
+// import Select from "react-select";
 
 import s from "../components/Tables.module.scss";
+import { useCallback } from "react";
 
 const FormCover = function () {
   let history = useHistory();
@@ -28,15 +29,15 @@ const FormCover = function () {
   const [imagePreview, setImagePreview] = useState([]);
   const [oldImage, setOldImage] = useState();
 
-  const options = [
-    { value: "hero-banner", label: "Banner / Hero" },
-    { value: "service-card", label: "Background Service Card di Bawah Banner" },
-    {
-      value: "bg-area",
-      label: "Background Jangkauan Layanan di Halaman Utama",
-    },
-    { value: "bg-footer", label: "Background Footer Layanan di Halaman Utama" },
-  ];
+  // const options = [
+  //   { value: "hero-banner", label: "Banner / Hero" },
+  //   { value: "service-card", label: "Background Service Card di Bawah Banner" },
+  //   {
+  //     value: "bg-area",
+  //     label: "Background Jangkauan Layanan di Halaman Utama",
+  //   },
+  //   { value: "bg-footer", label: "Background Footer Layanan di Halaman Utama" },
+  // ];
 
   const onChangeImage = (imageList, _addUpdateIndex) => {
     if (imageList[0].file.size <= 2097152) {
@@ -58,7 +59,7 @@ const FormCover = function () {
     setImagePreview([]);
   };
 
-  const getCoversData = async (id) => {
+  const getCoversData = useCallback(async (id) => {
     const res = await getCoverById(id);
     setState(res, () => {
       const copyState = res;
@@ -66,7 +67,7 @@ const FormCover = function () {
       setState({ ...copyState });
     });
     setOldImage(res.image);
-  };
+  }, [setState]);
 
   const onSubmitHandler = (e) => {
     e.preventDefault();
@@ -121,7 +122,7 @@ const FormCover = function () {
     if (id) {
       getCoversData(id);
     }
-  }, []);
+  }, [getCoversData, id]);
 
   return (
     <div>

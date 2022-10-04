@@ -8,7 +8,7 @@ import { changeActiveSidebarItem } from "../../actions/navigation.js";
 import cn from "classnames";
 
 const Sidebar = (props) => {
-  const { activeItem = "", ...restProps } = props;
+  // const { activeItem = "", ...restProps } = props;
 
   const [burgerSidebarOpen, setBurgerSidebarOpen] = useState(false);
 

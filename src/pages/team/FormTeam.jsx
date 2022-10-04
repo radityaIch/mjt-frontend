@@ -15,6 +15,7 @@ import { Col, Row, Button, FormGroup, FormText, Input } from "reactstrap";
 import Widget from "../../components/Widget/Widget.js";
 
 import s from "../components/Tables.module.scss";
+import { useCallback } from "react";
 
 const FormTeam = function () {
   let history = useHistory();
@@ -57,7 +58,7 @@ const FormTeam = function () {
     setImagePreview([]);
   };
 
-  const getTeamData = async (id) => {
+  const getTeamData = useCallback(async (id) => {
     const res = await getTeamById(id);
     setState(res, () => {
       const copyState = res;
@@ -65,7 +66,7 @@ const FormTeam = function () {
       setState({ ...copyState });
     });
     setOldImage(res.image);
-  };
+  }, [setState]);
 
   const onSubmitHandler = (e) => {
     e.preventDefault();
@@ -120,7 +121,7 @@ const FormTeam = function () {
     if (id) {
       getTeamData(id);
     }
-  }, []);
+  }, [getTeamData, id]);
 
   return (
     <div>

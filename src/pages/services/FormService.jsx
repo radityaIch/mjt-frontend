@@ -19,6 +19,7 @@ import { Col, Row, Button, FormGroup, FormText, Input } from "reactstrap";
 import Widget from "../../components/Widget/Widget.js";
 
 import s from "../components/Tables.module.scss";
+import { useCallback } from "react";
 
 const FormService = function () {
   let history = useHistory();
@@ -62,7 +63,7 @@ const FormService = function () {
     setImagePreview([]);
   };
 
-  const getServicesData = async (id) => {
+  const getServicesData = useCallback(async (id) => {
     const res = await getServiceById(id);
     setState(res, () => {
       const copyState = res;
@@ -70,7 +71,7 @@ const FormService = function () {
       setState({ ...copyState });
     });
     setOldImage(res.image);
-  };
+  }, [setState]);
 
   const onSubmitHandler = (e) => {
     e.preventDefault();
@@ -125,7 +126,7 @@ const FormService = function () {
     if (id) {
       getServicesData(id);
     }
-  }, []);
+  }, [getServicesData, id]);
 
   return (
     <div>
