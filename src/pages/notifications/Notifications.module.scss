@@ -1,0 +1,47 @@
+@import "../../styles/helpers";
+
+.widgetText {
+  margin-top: 10px;
+  font-size: $font-size-sm;
+  font-weight: $font-size-base;
+  color: $base-dark-gray;
+}
+
+.layoutContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 40px;
+  width: 100%;
+  height: 130px;
+  border: 1px dashed $blue-mjt;
+}
+
+.layoutButtonsRow {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.layoutButton {
+  width: 82px;
+  height: 36px;
+  background-color: #c7d0d934;
+  outline: none;
+  border: none;
+}
+
+.layoutButtonActive {
+  background-color: $yellow;
+}
+
+.layoutText {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-base;
+  color: $blue-mjt;
+}
+
+progress {
+  visibility: hidden;
+}
