@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useHistory, useParams } from "react-router";
 import { useStateWithCallbackLazy } from "use-state-with-callback";
 import ImageUploading from "react-images-uploading";
@@ -19,7 +19,6 @@ import { Col, Row, Button, FormGroup, FormText, Input } from "reactstrap";
 import Widget from "../../components/Widget/Widget.js";
 
 import s from "../components/Tables.module.scss";
-import { useCallback } from "react";
 
 const FormAboutUs = (props) => {
   let history = useHistory();
