@@ -1,15 +1,15 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { useHistory, useParams } from "react-router";
-import { useStateWithCallbackLazy } from "use-state-with-callback";
+// import { useHistory, useParams } from "react-router";
+// import { useStateWithCallbackLazy } from "use-state-with-callback";
 import { Link } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import {
-  notificationOptions,
+  // notificationOptions,
   setFormData,
 } from "../../components/utils/utils.js";
-import { toast } from "react-toastify";
-import Notification from "../../components/Notification/Notification.js";
-import Swal from "sweetalert2";
+// import { toast } from "react-toastify";
+// import Notification from "../../components/Notification/Notification.js";
+// import Swal from "sweetalert2";
 import {
   Col,
   Row,
@@ -24,37 +24,83 @@ import Widget from "../../components/Widget/Widget.js";
 import s from "../components/Tables.module.scss";
 
 const TravelForm = (props) => {
-  const [goods, setGoods] = useState([
+  const goodsDummy = [
     {
-      good_unit: "",
-      qty: 0,
-      keterangan: "",
+      good_unit: "Armaflex",
+      qty: 12,
+      keterangan: "buah",
     },
-  ]);
+    {
+      good_unit: "Koido",
+      qty: 1,
+      keterangan: "Box",
+    },
+    {
+      good_unit: "Pipa Roll",
+      qty: 30,
+      keterangan: "Buah",
+    },
+  ];
 
-  const [permit, setPermit] = useState({
-    no_do: "",
-    pengirim: "",
-    alamat_muat: "",
-    alamat_kirim: "",
-    no_telp: "",
+  const [goods, setGoods] = useState(
+    !props.isEdit
+      ? [
+          {
+            good_unit: "",
+            qty: 0,
+            keterangan: "",
+          },
+        ]
+      : goodsDummy
+  );
+
+  const permitDummy = {
+    no_do: "MJT512080422",
+    pengirim: "Andi",
+    alamat_muat: "Tanah Tinggi, Tangerang",
+    alamat_kirim: "Jumputrejo, Sidoarjo",
+    no_telp: "08123456789",
     armada: {
-      nopol: "",
-      driver: "",
-      unit: "",
-      pengiriman: "",
-      harga_beli: 0,
-      harga_jual: 0,
+      nopol: "B 2067 UKB",
+      driver: "Budi",
+      unit: "Blind Van",
+      pengiriman: "KONSUL",
+      harga_beli: 100000,
+      harga_jual: 100000,
     },
     barang: goods,
-  });
+  };
+
+  const [permit, setPermit] = useState(
+    !props.isEdit
+      ? {
+          no_do: "",
+          pengirim: "",
+          alamat_muat: "",
+          alamat_kirim: "",
+          no_telp: "",
+          armada: {
+            nopol: "",
+            driver: "",
+            unit: "",
+            pengiriman: "",
+            harga_beli: 0,
+            harga_jual: 0,
+          },
+          barang: goods,
+        }
+      : permitDummy
+  );
 
   const changeInput = (event) => {
     setPermit({ ...permit, [event.target.name]: event.target.value });
   };
 
   const changeArmadaInput = (event) => {
-    setPermit({ ...permit, armada: {...permit.armada, [event.target.name]: event.target.value} });
+    setPermit({
+      ...permit,
+      armada: { ...permit.armada, [event.target.name]: event.target.value },
+    });
   };
 
   const onSubmitHandler = (event) => {
@@ -82,10 +128,10 @@ const TravelForm = (props) => {
     setPermit({ ...permit, barang: goods });
   };
 
-  useEffect(()=>{
-    setPermit({...permit, barang: goods})
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[goods])
+  useEffect(() => {
+    setPermit({ ...permit, barang: goods });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [goods]);
 
   return (
     <div>
@@ -96,8 +142,20 @@ const TravelForm = (props) => {
               <Widget>
                 <div className={s.tableTitle}>
                   <h2 className="headline-2">
-                    {props.isEdit ? "Update Surat Jalan" : "Tambah Surat Jalan"}
+                    {props.isEdit ? "Detail Surat Jalan" : "Tambah Surat Jalan"}
                   </h2>
+
+                  {props.isEdit ? (
+                    <div className="d-flex">
+                      <Link to="#">
+                        <Button className="rounded-pill mr-3" color="primary">
+                          Export ke PDF
+                        </Button>
+                      </Link>
+                    </div>
+                  ) : (
+                    ""
+                  )}
                 </div>
 
                 <form
@@ -400,11 +458,23 @@ const TravelForm = (props) => {
                     </Button>
 
                     <div className="d-flex justify-content-end">
+                      {props.isEdit ? (
+                        <Button
+                          type="button"
+                          className="mr-auto"
+                          color="danger"
+                        >
+                          Batalkan Pengiriman
+                        </Button>
+                      ) : (
+                        ""
+                      )}
+
                       <Button type="reset" color="danger" className="mr-2">
                         Batal
                       </Button>
                       <Button type="submit" color="success">
-                        Simpan
+                        {props.isEdit ? "Simpan Perubahan" : "Simpan"}
                       </Button>
                     </div>
                   </div>
