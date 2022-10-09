@@ -115,9 +115,11 @@ const TravelPermit = () => {
                               </td>
                               <td>{trimmedText(permit.updateTerakhir)}</td>
                               <td>
+                                <Link to={`/dashboard/surat-jalan/${permit.no_resi}`}>
                                 <Button className="mr-2" color="primary">
                                   Detail
                                 </Button>
+                                </Link>
                                 <Button color="success">Selesai</Button>
                               </td>
                             </tr>
