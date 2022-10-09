@@ -53,6 +53,8 @@ import FormCover from "../../pages/covers/FormCover";
 import Pros from "../../pages/pros/Pros";
 import FormPros from "../../pages/pros/FormPros";
 import AddPermit from "../../pages/travelpermit/AddPermit";
+import PermitDetails from "../../pages/travelpermit/PermitDetails";
+import UpdatePermit from "../../pages/travelpermit/UpdatePermit";
 
 const Layout = (props) => {
   const userLevel = parseInt(localStorage.getItem("level"));
@@ -98,6 +100,10 @@ const Layout = (props) => {
             <Route path="/dashboard/surat-jalan/dalam-perjalanan" exact component={TravelPermit} />
             <Route path="/dashboard/surat-jalan/selesai" exact component={TravelPermitFinish} />
             <Route path="/dashboard/surat-jalan/tambah-surat-jalan" exact component={AddPermit} />
+            <Route path="/dashboard/surat-jalan/:id" exact component={PermitDetails} />
+            <Route path="/dashboard/surat-jalan/:id/update-perjalanan" exact component={UpdatePermit} />
+
+
 
 
 
