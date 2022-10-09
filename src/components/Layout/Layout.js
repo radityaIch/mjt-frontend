@@ -42,6 +42,9 @@ import Notification from "../Notification/Notification";
 import { notificationOptions } from "../utils/utils";
 import FormPhoto from "../../pages/aboutus/FormPhoto";
 import FormServiceGallery from "../../pages/services/FormServiceGallery";
+import TravelPermit from "../../pages/travelpermit/TravelPermit";
+import TravelPermitFinish from "../../pages/travelpermit/TravelPermitFinish";
+
 
 // -- Component Styles
 import s from "./Layout.module.scss";
@@ -49,6 +52,7 @@ import Covers from "../../pages/covers/Covers";
 import FormCover from "../../pages/covers/FormCover";
 import Pros from "../../pages/pros/Pros";
 import FormPros from "../../pages/pros/FormPros";
+import AddPermit from "../../pages/travelpermit/AddPermit";
 
 const Layout = (props) => {
   const userLevel = parseInt(localStorage.getItem("level"));
@@ -88,6 +92,14 @@ const Layout = (props) => {
           <Breadcrumbs url={props.location.pathname} />
           <Switch>
             <Route path="/dashboard" exact component={Dashboard} />
+            <Route path="/dashboard/surat-jalan/" exact>
+              <Redirect to="/dashboard/surat-jalan/dalam-perjalanan" />
+            </Route>
+            <Route path="/dashboard/surat-jalan/dalam-perjalanan" exact component={TravelPermit} />
+            <Route path="/dashboard/surat-jalan/selesai" exact component={TravelPermitFinish} />
+            <Route path="/dashboard/surat-jalan/tambah-surat-jalan" exact component={AddPermit} />
+
+
 
             {/* Armada Routes */}
             <Route path="/dashboard/armada" exact component={Armada} />

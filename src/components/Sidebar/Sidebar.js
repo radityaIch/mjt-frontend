@@ -43,8 +43,30 @@ const Sidebar = (props) => {
           iconName={<i className={"eva eva-home-outline"} />}
           link="/dashboard"
           index="dashboard"
-        // badge="9"
+          // badge="9"
         />
+        <LinksGroup
+          onActiveSidebarItemChange={(activeItem) =>
+            props.dispatch(changeActiveSidebarItem(activeItem))
+          }
+          activeItem={props.activeItem}
+          header="Surat Jalan"
+          isHeader
+          iconName={<i className={"eva eva-file-add-outline"} />}
+          link="/dashboard/surat-jalan"
+          index="surat-jalan"
+          childrenLinks={[
+            {
+              header: "Dalam Perjalanan",
+              link: "/dashboard/surat-jalan/dalam-perjalanan",
+            },
+            {
+              header: "Selesai Perjalanan",
+              link: "/dashboard/surat-jalan/selesai",
+            },
+          ]}
+        />
+
         <h5 className={s.navTitle}>MENU</h5>
         <LinksGroup
           onActiveSidebarItemChange={(activeItem) =>
