@@ -1,15 +1,15 @@
 import React, { useState, useEffect, useCallback } from "react";
-// import { useHistory, useParams } from "react-router";
+import { useHistory, useParams } from "react-router";
 // import { useStateWithCallbackLazy } from "use-state-with-callback";
 import { Link } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import {
-  // notificationOptions,
+  notificationOptions,
   setFormData,
 } from "../../components/utils/utils.js";
-// import { toast } from "react-toastify";
-// import Notification from "../../components/Notification/Notification.js";
-// import Swal from "sweetalert2";
+import { toast } from "react-toastify";
+import Notification from "../../components/Notification/Notification.js";
+import Swal from "sweetalert2";
 import {
   Col,
   Row,
@@ -22,8 +22,19 @@ import {
 } from "reactstrap";
 import Widget from "../../components/Widget/Widget.js";
 import s from "../components/Tables.module.scss";
+import {
+  addPermit,
+  getAllPermit,
+  getPermitById,
+} from "../../api/TravelPermitAPI.js";
+
+import { addSupply, getAllSupply } from "../../api/TravelSupplyAPI.js";
+import { addTracking } from "../../api/TravelTrackingAPI.js";
 
 const TravelForm = (props) => {
+  const history = useHistory();
+  const { id } = useParams();
+
   const goodsDummy = [
     {
       good_unit: "Armaflex",
@@ -55,6 +66,7 @@ const TravelForm = (props) => {
   );
 
   const permitDummy = {
+    permitId: uuidv4(),
     no_do: "MJT512080422",
     pengirim: "Andi",
     alamat_muat: "Tanah Tinggi, Tangerang",
@@ -92,6 +104,36 @@ const TravelForm = (props) => {
       : permitDummy
   );
 
+  const getPermitData = async (id) => {
+    const permitData = await getPermitById(id);
+    const supplyData = await getAllSupply(id);
+    const supplies = supplyData.map((supply) => ({
+      good_unit: supply.barang,
+      qty: supply.qty,
+      keterangan: supply.keterangan,
+    }));
+
+    setGoods(supplies)
+
+    const permitEdit = {
+      no_do: permitData.no_do,
+      pengirim: permitData.pengirim,
+      alamat_muat: permitData.alamat_muat,
+      alamat_kirim: permitData.alamat_kirim,
+      no_telp: permitData.no_telp,
+      armada: {
+        nopol: permitData.nopol,
+        driver: permitData.driver,
+        unit: permitData.unit,
+        pengiriman: permitData.pengiriman,
+        harga_beli: permitData.harga_beli,
+        harga_jual: permitData.harga_jual,
+      },
+      barang: supplies,
+    };
+    setPermit(permitEdit);
+  };
+
   const changeInput = (event) => {
     setPermit({ ...permit, [event.target.name]: event.target.value });
   };
@@ -105,8 +147,72 @@ const TravelForm = (props) => {
 
   const onSubmitHandler = (event) => {
     event.preventDefault();
-    const payload = setFormData(permit);
-    console.log(permit);
+
+    Swal.fire({
+      title: "Menyimpan Informasi Surat",
+      html: "Mohon tunggu, sedang menyimpan informasi surat",
+      padding: "30px",
+      didOpen: async () => {
+        Swal.showLoading();
+        console.log(permit);
+        const cleanData = {
+          no_do: permit.no_do,
+          pengirim: permit.pengirim,
+          alamat_muat: permit.alamat_muat,
+          alamat_kirim: permit.alamat_kirim,
+          no_telp: permit.no_telp,
+          nopol: permit.armada.nopol,
+          driver: permit.armada.driver,
+          unit: permit.armada.unit,
+          pengiriman: permit.armada.pengiriman,
+          harga_jual: permit.armada.harga_jual,
+          harga_beli: permit.armada.harga_beli,
+          status_pengiriman: "Dalam Perjalanan",
+        };
+
+        const payload = setFormData(cleanData);
+
+        if (!props.isEdit) {
+          await addPermit(payload)
+            .then(async (res) => {
+              if (res.status === 200 || res.status === 201) {
+                const allpermit = await getAllPermit();
+                const newID = allpermit[0].id;
+
+                permit.barang.map(async (brg) => {
+                  const payload = setFormData({
+                    travel_permit_id: newID,
+                    barang: brg.good_unit,
+                    qty: brg.qty,
+                    keterangan: brg.keterangan,
+                  });
+                  return await addSupply(payload).then(async () => {
+                    const payload = setFormData({
+                      travel_permit_id: newID,
+                      keterangan: "Masih Dalam Perjalanan",
+                      kendala: "Tidak Ada",
+                    });
+
+                    return await addTracking(payload);
+                  });
+                });
+              }
+            })
+            .then(() => {
+              Swal.close();
+              history.push("/dashboard/surat-jalan/dalam-perjalanan");
+              toast(
+                <Notification
+                  type="success"
+                  message="Surat baru berhasil ditambahkan!"
+                  withIcon
+                />,
+                notificationOptions
+              );
+            });
+        }
+      },
+    });
   };
 
   const deleteByIndex = useCallback(
@@ -128,10 +234,12 @@ const TravelForm = (props) => {
     setPermit({ ...permit, barang: goods });
   };
 
+
   useEffect(() => {
-    setPermit({ ...permit, barang: goods });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [goods]);
+    if(id) {
+      getPermitData(id);
+    }
+  }, [id]);
 
   return (
     <div>
@@ -457,7 +565,7 @@ const TravelForm = (props) => {
                       Tambah Barang
                     </Button>
 
-                    <div className="d-flex justify-content-end">
+                    <div className="mb-5 d-flex justify-content-end">
                       {props.isEdit ? (
                         <Button
                           type="button"

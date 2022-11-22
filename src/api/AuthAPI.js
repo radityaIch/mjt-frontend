@@ -21,7 +21,7 @@ export const registerUserAccount = async (payload) => {
 export const loginUserAccount = async (payload) => {
   try {
     const res = await axios.post(
-      `https://service.mjt-tlpartner.com/api/auth/login`,
+      `http://localhost:8000/api/auth/login`,
       {
         email: payload.creds.email,
         password: payload.creds.password,
