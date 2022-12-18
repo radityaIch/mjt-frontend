@@ -7,7 +7,7 @@ export const getAllSupply = async (id) => {
       `http://localhost:8000/api/supply/${id}`,
       config
     );
-    return res.data.data;
+    return await res.data.data;
   } catch (err) {
     return err.response;
   }

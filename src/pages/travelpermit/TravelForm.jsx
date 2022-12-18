@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useHistory, useParams } from "react-router";
-// import { useStateWithCallbackLazy } from "use-state-with-callback";
 import { Link } from "react-router-dom";
-import { v4 as uuidv4 } from "uuid";
 import {
   notificationOptions,
   setFormData,
@@ -35,104 +33,30 @@ const TravelForm = (props) => {
   const history = useHistory();
   const { id } = useParams();
 
-  const goodsDummy = [
+  const [goods, setGoods] = useState([
     {
-      good_unit: "Armaflex",
-      qty: 12,
-      keterangan: "buah",
+      good_unit: "",
+      qty: 0,
+      keterangan: "",
     },
-    {
-      good_unit: "Koido",
-      qty: 1,
-      keterangan: "Box",
-    },
-    {
-      good_unit: "Pipa Roll",
-      qty: 30,
-      keterangan: "Buah",
-    },
-  ];
+  ]);
 
-  const [goods, setGoods] = useState(
-    !props.isEdit
-      ? [
-          {
-            good_unit: "",
-            qty: 0,
-            keterangan: "",
-          },
-        ]
-      : goodsDummy
-  );
-
-  const permitDummy = {
-    permitId: uuidv4(),
-    no_do: "MJT512080422",
-    pengirim: "Andi",
-    alamat_muat: "Tanah Tinggi, Tangerang",
-    alamat_kirim: "Jumputrejo, Sidoarjo",
-    no_telp: "08123456789",
+  const [permit, setPermit] = useState({
+    no_do: "",
+    pengirim: "",
+    alamat_muat: "",
+    alamat_kirim: "",
+    no_telp: "",
     armada: {
-      nopol: "B 2067 UKB",
-      driver: "Budi",
-      unit: "Blind Van",
-      pengiriman: "KONSUL",
-      harga_beli: 100000,
-      harga_jual: 100000,
+      nopol: "",
+      driver: "",
+      unit: "",
+      pengiriman: "",
+      harga_beli: 0,
+      harga_jual: 0,
     },
     barang: goods,
-  };
-
-  const [permit, setPermit] = useState(
-    !props.isEdit
-      ? {
-          no_do: "",
-          pengirim: "",
-          alamat_muat: "",
-          alamat_kirim: "",
-          no_telp: "",
-          armada: {
-            nopol: "",
-            driver: "",
-            unit: "",
-            pengiriman: "",
-            harga_beli: 0,
-            harga_jual: 0,
-          },
-          barang: goods,
-        }
-      : permitDummy
-  );
-
-  const getPermitData = async (id) => {
-    const permitData = await getPermitById(id);
-    const supplyData = await getAllSupply(id);
-    const supplies = supplyData.map((supply) => ({
-      good_unit: supply.barang,
-      qty: supply.qty,
-      keterangan: supply.keterangan,
-    }));
-
-    setGoods(supplies)
-
-    const permitEdit = {
-      no_do: permitData.no_do,
-      pengirim: permitData.pengirim,
-      alamat_muat: permitData.alamat_muat,
-      alamat_kirim: permitData.alamat_kirim,
-      no_telp: permitData.no_telp,
-      armada: {
-        nopol: permitData.nopol,
-        driver: permitData.driver,
-        unit: permitData.unit,
-        pengiriman: permitData.pengiriman,
-        harga_beli: permitData.harga_beli,
-        harga_jual: permitData.harga_jual,
-      },
-      barang: supplies,
-    };
-    setPermit(permitEdit);
-  };
+  });
 
   const changeInput = (event) => {
     setPermit({ ...permit, [event.target.name]: event.target.value });
@@ -234,12 +158,43 @@ const TravelForm = (props) => {
     setPermit({ ...permit, barang: goods });
   };
 
-
   useEffect(() => {
-    if(id) {
-      getPermitData(id);
-    }
-  }, [id]);
+    const getPermitData = async (id) => {
+      const permitData = await getPermitById(id);
+      if (permitData.status) {
+        history.push("/dashboard/surat-jalan/dalam-perjalanan");
+      } else {
+        const supplyData = await getAllSupply(id);
+        const supplies = supplyData.map((supply) => ({
+          good_unit: supply.barang,
+          qty: supply.qty,
+          keterangan: supply.keterangan,
+        }));
+  
+        setGoods(supplies);
+  
+        const permitEdit = {
+          no_do: permitData.no_do,
+          pengirim: permitData.pengirim,
+          alamat_muat: permitData.alamat_muat,
+          alamat_kirim: permitData.alamat_kirim,
+          no_telp: permitData.no_telp,
+          armada: {
+            nopol: permitData.nopol,
+            driver: permitData.driver,
+            unit: permitData.unit,
+            pengiriman: permitData.pengiriman,
+            harga_beli: permitData.harga_beli,
+            harga_jual: permitData.harga_jual,
+          },
+          barang: supplies,
+        };
+        setPermit(permitEdit);
+      }
+    };
+    
+    getPermitData(id);
+  }, [history, id]);
 
   return (
     <div>
@@ -255,7 +210,7 @@ const TravelForm = (props) => {
 
                   {props.isEdit ? (
                     <div className="d-flex">
-                      <Link to="#">
+                      <Link to={`${id}/print`}>
                         <Button className="rounded-pill mr-3" color="primary">
                           Export ke PDF
                         </Button>
@@ -461,99 +416,111 @@ const TravelForm = (props) => {
 
                     {/* Goods Form */}
                     <h6 className="mt-5 mb-3">Keterangan Barang</h6>
-                    {goods.map((good, index) => (
-                      <FormGroup className="my-3" key={index}>
-                        <Row>
-                          <Col md="4">
-                            <FormGroup className="my-3">
-                              <FormText className="mb-2">Unit</FormText>
-                              <Input
-                                id="good-unit"
-                                name="good_unit"
-                                className="input-transparent py-4 pl-3"
-                                type="text"
-                                required
-                                onChange={(e) => {
-                                  const newData = goods.filter((good, i) => {
-                                    if (index === i) {
-                                      return (good.good_unit = e.target.value);
-                                    }
-                                    return good;
-                                  });
+                    {goods
+                      ? goods.map((good, index) => (
+                          <FormGroup className="my-3" key={index}>
+                            <Row>
+                              <Col md="4">
+                                <FormGroup className="my-3">
+                                  <FormText className="mb-2">Unit</FormText>
+                                  <Input
+                                    id="good-unit"
+                                    name="good_unit"
+                                    className="input-transparent py-4 pl-3"
+                                    type="text"
+                                    required
+                                    onChange={(e) => {
+                                      const newData = goods.filter(
+                                        (good, i) => {
+                                          if (index === i) {
+                                            return (good.good_unit =
+                                              e.target.value);
+                                          }
+                                          return good;
+                                        }
+                                      );
 
-                                  setGoods(newData);
-                                }}
-                                value={good?.good_unit}
-                              />
-                            </FormGroup>
-                          </Col>
+                                      setGoods(newData);
+                                    }}
+                                    value={good?.good_unit}
+                                  />
+                                </FormGroup>
+                              </Col>
 
-                          <Col md="2">
-                            <FormGroup className="my-3">
-                              <FormText className="mb-2">Qty</FormText>
-                              <Input
-                                id="qty"
-                                name="qty"
-                                className="input-transparent py-4 pl-3"
-                                type="number"
-                                required
-                                onChange={(e) => {
-                                  const newData = goods.filter((good, i) => {
-                                    if (index === i) {
-                                      return (good.qty = e.target.value);
-                                    }
-                                    return good;
-                                  });
+                              <Col md="2">
+                                <FormGroup className="my-3">
+                                  <FormText className="mb-2">Qty</FormText>
+                                  <Input
+                                    id="qty"
+                                    name="qty"
+                                    className="input-transparent py-4 pl-3"
+                                    type="number"
+                                    required
+                                    onChange={(e) => {
+                                      const newData = goods.filter(
+                                        (good, i) => {
+                                          if (index === i) {
+                                            return (good.qty = e.target.value);
+                                          }
+                                          return good;
+                                        }
+                                      );
 
-                                  setGoods(newData);
-                                }}
-                                value={good?.qty}
-                              />
-                            </FormGroup>
-                          </Col>
+                                      setGoods(newData);
+                                    }}
+                                    value={good?.qty}
+                                  />
+                                </FormGroup>
+                              </Col>
 
-                          <Col md="5">
-                            <FormGroup className="my-3">
-                              <FormText className="mb-2">Keterangan</FormText>
-                              <Input
-                                id="keterangan"
-                                name="keterangan"
-                                className="input-transparent py-4 pl-3"
-                                type="text"
-                                required
-                                onChange={(e) => {
-                                  const newData = goods.filter((good, i) => {
-                                    if (index === i) {
-                                      return (good.keterangan = e.target.value);
-                                    }
-                                    return good;
-                                  });
+                              <Col md="5">
+                                <FormGroup className="my-3">
+                                  <FormText className="mb-2">
+                                    Keterangan
+                                  </FormText>
+                                  <Input
+                                    id="keterangan"
+                                    name="keterangan"
+                                    className="input-transparent py-4 pl-3"
+                                    type="text"
+                                    required
+                                    onChange={(e) => {
+                                      const newData = goods.filter(
+                                        (good, i) => {
+                                          if (index === i) {
+                                            return (good.keterangan =
+                                              e.target.value);
+                                          }
+                                          return good;
+                                        }
+                                      );
 
-                                  setGoods(newData);
-                                }}
-                                value={good?.keterangan}
-                              />
-                            </FormGroup>
-                          </Col>
+                                      setGoods(newData);
+                                    }}
+                                    value={good?.keterangan}
+                                  />
+                                </FormGroup>
+                              </Col>
 
-                          <Col
-                            className="mt-4 d-flex align-items-center"
-                            md="1"
-                          >
-                            <Button
-                              type="button"
-                              onClick={() => deleteByIndex(index)}
-                              className="w-100 px-0"
-                              size="lg"
-                              color="danger"
-                              disabled={goods.length === 1}
-                            >
-                              X
-                            </Button>
-                          </Col>
-                        </Row>
-                      </FormGroup>
-                    ))}
+                              <Col
+                                className="mt-4 d-flex align-items-center"
+                                md="1"
+                              >
+                                <Button
+                                  type="button"
+                                  onClick={() => deleteByIndex(index)}
+                                  className="w-100 px-0"
+                                  size="lg"
+                                  color="danger"
+                                  disabled={goods.length === 1}
+                                >
+                                  X
+                                </Button>
+                              </Col>
+                            </Row>
+                          </FormGroup>
+                        ))
+                      : ""}
 
                     <Button
                       onClick={() => addGoodies()}

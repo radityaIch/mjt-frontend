@@ -45,7 +45,6 @@ import FormServiceGallery from "../../pages/services/FormServiceGallery";
 import TravelPermit from "../../pages/travelpermit/TravelPermit";
 import TravelPermitFinish from "../../pages/travelpermit/TravelPermitFinish";
 
-
 // -- Component Styles
 import s from "./Layout.module.scss";
 import Covers from "../../pages/covers/Covers";
@@ -55,6 +54,7 @@ import FormPros from "../../pages/pros/FormPros";
 import AddPermit from "../../pages/travelpermit/AddPermit";
 import PermitDetails from "../../pages/travelpermit/PermitDetails";
 import UpdatePermit from "../../pages/travelpermit/UpdatePermit";
+import PermitTemplate from "../../pages/travelpermit/PermitTemplate";
 
 const Layout = (props) => {
   const userLevel = parseInt(localStorage.getItem("level"));
@@ -62,7 +62,7 @@ const Layout = (props) => {
 
   const doLogout = useCallback(() => {
     props.dispatch(logoutUser());
-  }, [props])
+  }, [props]);
 
   useEffect(() => {
     async function isLoggedIn() {
@@ -82,7 +82,7 @@ const Layout = (props) => {
         doLogout();
       }
     }
-    isLoggedIn()
+    isLoggedIn();
   }, [doLogout]);
 
   return (
@@ -94,18 +94,41 @@ const Layout = (props) => {
           <Breadcrumbs url={props.location.pathname} />
           <Switch>
             <Route path="/dashboard" exact component={Dashboard} />
+
+            {/* Permit Routes */}
             <Route path="/dashboard/surat-jalan/" exact>
               <Redirect to="/dashboard/surat-jalan/dalam-perjalanan" />
             </Route>
-            <Route path="/dashboard/surat-jalan/dalam-perjalanan" exact component={TravelPermit} />
-            <Route path="/dashboard/surat-jalan/selesai" exact component={TravelPermitFinish} />
-            <Route path="/dashboard/surat-jalan/tambah-surat-jalan" exact component={AddPermit} />
-            <Route path="/dashboard/surat-jalan/:id" exact component={PermitDetails} />
-            <Route path="/dashboard/surat-jalan/:id/update-perjalanan" exact component={UpdatePermit} />
-
-
-
-
+            <Route
+              path="/dashboard/surat-jalan/dalam-perjalanan"
+              exact
+              component={TravelPermit}
+            />
+            <Route
+              path="/dashboard/surat-jalan/selesai"
+              exact
+              component={TravelPermitFinish}
+            />
+            <Route
+              path="/dashboard/surat-jalan/tambah-surat-jalan"
+              exact
+              component={AddPermit}
+            />
+            <Route
+              path="/dashboard/surat-jalan/:id"
+              exact
+              component={PermitDetails}
+            />
+            <Route
+            path="/dashboard/surat-jalan/:id"
+            
+            component={PermitTemplate}
+          />
+            <Route
+              path="/dashboard/surat-jalan/:id/update-perjalanan"
+              exact
+              component={UpdatePermit}
+            />
 
             {/* Armada Routes */}
             <Route path="/dashboard/armada" exact component={Armada} />
