@@ -54,300 +54,295 @@ import FormPros from "../../pages/pros/FormPros";
 import AddPermit from "../../pages/travelpermit/AddPermit";
 import PermitDetails from "../../pages/travelpermit/PermitDetails";
 import UpdatePermit from "../../pages/travelpermit/UpdatePermit";
-import PermitTemplate from "../../pages/travelpermit/PermitTemplate";
+// import PermitTemplate from "../../pages/travelpermit/PermitTemplate";
 
 const Layout = (props) => {
-  const userLevel = parseInt(localStorage.getItem("level"));
-  const [userData, setUserData] = useState();
+	const userLevel = parseInt(localStorage.getItem("level"));
+	const [userData, setUserData] = useState();
 
-  const doLogout = useCallback(() => {
-    props.dispatch(logoutUser());
-  }, [props]);
+	const doLogout = useCallback(() => {
+		props.dispatch(logoutUser());
+	}, [props]);
 
-  useEffect(() => {
-    async function isLoggedIn() {
-      const response = await getLoggedUser();
-      setUserData(response.data.data);
-      if (response.status === 401) {
-        if (response.data.message === "Unauthorized")
-          toast(
-            <Notification
-              type="warning"
-              message="Sesi telah habis! Mohon login kembali"
-              withIcon
-            />,
-            notificationOptions
-          );
+	useEffect(() => {
+		async function isLoggedIn() {
+			const response = await getLoggedUser();
+			setUserData(response.data.data);
+			if (response.status === 401) {
+				if (response.data.message === "Unauthorized")
+					toast(
+						<Notification
+							type="warning"
+							message="Sesi telah habis! Mohon login kembali"
+							withIcon
+						/>,
+						notificationOptions
+					);
 
-        doLogout();
-      }
-    }
-    isLoggedIn();
-  }, [doLogout]);
+				doLogout();
+			}
+		}
+		isLoggedIn();
+	}, [doLogout]);
 
-  return (
-    <div className={s.root}>
-      <div className={s.wrap}>
-        <Header userData={userData} />
-        <Sidebar userData={userData} />
-        <main className={s.content}>
-          <Breadcrumbs url={props.location.pathname} />
-          <Switch>
-            <Route path="/dashboard" exact component={Dashboard} />
+	return (
+		<div className={s.root}>
+			<div className={s.wrap}>
+				<Header userData={userData} />
+				<Sidebar userData={userData} />
+				<main className={s.content}>
+					<Breadcrumbs url={props.location.pathname} />
+					<Switch>
+						<Route path="/dashboard" exact component={Dashboard} />
 
-            {/* Permit Routes */}
-            <Route path="/dashboard/surat-jalan/" exact>
-              <Redirect to="/dashboard/surat-jalan/dalam-perjalanan" />
-            </Route>
-            <Route
-              path="/dashboard/surat-jalan/dalam-perjalanan"
-              exact
-              component={TravelPermit}
-            />
-            <Route
-              path="/dashboard/surat-jalan/selesai"
-              exact
-              component={TravelPermitFinish}
-            />
-            <Route
-              path="/dashboard/surat-jalan/tambah-surat-jalan"
-              exact
-              component={AddPermit}
-            />
-            <Route
-              path="/dashboard/surat-jalan/:id"
-              exact
-              component={PermitDetails}
-            />
-            <Route
-            path="/dashboard/surat-jalan/:id"
-            
-            component={PermitTemplate}
-          />
-            <Route
-              path="/dashboard/surat-jalan/:id/update-perjalanan"
-              exact
-              component={UpdatePermit}
-            />
+						{/* Permit Routes */}
+						<Route path="/dashboard/surat-jalan/" exact>
+							<Redirect to="/dashboard/surat-jalan/dalam-perjalanan" />
+						</Route>
+						<Route
+							path="/dashboard/surat-jalan/dalam-perjalanan"
+							exact
+							component={TravelPermit}
+						/>
+						<Route
+							path="/dashboard/surat-jalan/selesai"
+							exact
+							component={TravelPermitFinish}
+						/>
+						<Route
+							path="/dashboard/surat-jalan/tambah-surat-jalan"
+							exact
+							component={AddPermit}
+						/>
+						<Route
+							path="/dashboard/surat-jalan/:id"
+							exact
+							component={PermitDetails}
+						/>
+						<Route
+							path="/dashboard/surat-jalan/:id/update-perjalanan"
+							exact
+							component={UpdatePermit}
+						/>
 
-            {/* Armada Routes */}
-            <Route path="/dashboard/armada" exact component={Armada} />
-            <Route
-              path="/dashboard/armada/tambah-armada"
-              exact
-              component={FormArmada}
-            />
-            <Route
-              path="/dashboard/armada/edit-armada/:id"
-              exact
-              component={FormArmada}
-            />
+						{/* Armada Routes */}
+						<Route path="/dashboard/armada" exact component={Armada} />
+						<Route
+							path="/dashboard/armada/tambah-armada"
+							exact
+							component={FormArmada}
+						/>
+						<Route
+							path="/dashboard/armada/edit-armada/:id"
+							exact
+							component={FormArmada}
+						/>
 
-            {/* Client Routes */}
-            <Route path="/dashboard/klien" exact component={Clients} />
-            <Route
-              path="/dashboard/klien/tambah-klien"
-              exact
-              component={FormClient}
-            />
-            <Route
-              path="/dashboard/klien/edit-klien/:id"
-              exact
-              component={FormClient}
-            />
+						{/* Client Routes */}
+						<Route path="/dashboard/klien" exact component={Clients} />
+						<Route
+							path="/dashboard/klien/tambah-klien"
+							exact
+							component={FormClient}
+						/>
+						<Route
+							path="/dashboard/klien/edit-klien/:id"
+							exact
+							component={FormClient}
+						/>
 
-            {/* Cover Routes */}
-            <Route path="/dashboard/cover" exact component={Covers} />
-            <Route
-              path="/dashboard/cover/tambah-cover"
-              exact
-              component={FormCover}
-            />
-            <Route
-              path="/dashboard/cover/edit-cover/:id"
-              exact
-              component={FormCover}
-            />
+						{/* Cover Routes */}
+						<Route path="/dashboard/cover" exact component={Covers} />
+						<Route
+							path="/dashboard/cover/tambah-cover"
+							exact
+							component={FormCover}
+						/>
+						<Route
+							path="/dashboard/cover/edit-cover/:id"
+							exact
+							component={FormCover}
+						/>
 
-            {/* Services Routes */}
-            <Route path="/dashboard/layanan" exact component={Services} />
-            <Route
-              path="/dashboard/layanan/tambah-layanan"
-              exact
-              component={FormService}
-            />
-            <Route
-              path="/dashboard/layanan/tambah-foto"
-              exact
-              component={FormServiceGallery}
-            />
-            <Route
-              path="/dashboard/layanan/edit-layanan/:id"
-              exact
-              component={FormService}
-            />
-            <Route
-              path="/dashboard/layanan/edit-foto/:id"
-              exact
-              component={FormServiceGallery}
-            />
+						{/* Services Routes */}
+						<Route path="/dashboard/layanan" exact component={Services} />
+						<Route
+							path="/dashboard/layanan/tambah-layanan"
+							exact
+							component={FormService}
+						/>
+						<Route
+							path="/dashboard/layanan/tambah-foto"
+							exact
+							component={FormServiceGallery}
+						/>
+						<Route
+							path="/dashboard/layanan/edit-layanan/:id"
+							exact
+							component={FormService}
+						/>
+						<Route
+							path="/dashboard/layanan/edit-foto/:id"
+							exact
+							component={FormServiceGallery}
+						/>
 
-            {/* Area Routes */}
-            <Route path="/dashboard/jangkauan-kota" exact component={Areas} />
-            <Route
-              path="/dashboard/jangkauan-kota/tambah-kota"
-              exact
-              component={FormArea}
-            />
-            <Route
-              path="/dashboard/jangkauan-kota/edit-kota/semua-kota"
-              exact
-              component={FormArea}
-            />
+						{/* Area Routes */}
+						<Route path="/dashboard/jangkauan-kota" exact component={Areas} />
+						<Route
+							path="/dashboard/jangkauan-kota/tambah-kota"
+							exact
+							component={FormArea}
+						/>
+						<Route
+							path="/dashboard/jangkauan-kota/edit-kota/semua-kota"
+							exact
+							component={FormArea}
+						/>
 
-            {/* Team Routes */}
-            <Route path="/dashboard/tim" exact component={Team} />
-            <Route
-              path="/dashboard/tim/tambah-tim"
-              exact
-              component={FormTeam}
-            />
-            <Route
-              path="/dashboard/tim/edit-tim/:id"
-              exact
-              component={FormTeam}
-            />
+						{/* Team Routes */}
+						<Route path="/dashboard/tim" exact component={Team} />
+						<Route
+							path="/dashboard/tim/tambah-tim"
+							exact
+							component={FormTeam}
+						/>
+						<Route
+							path="/dashboard/tim/edit-tim/:id"
+							exact
+							component={FormTeam}
+						/>
 
-            {/* Price List Routes */}
-            <Route path="/dashboard/daftar-harga" exact component={PriceList} />
-            <Route
-              path="/dashboard/daftar-harga/tambah-harga"
-              exact
-              component={FormPriceList}
-            />
-            <Route
-              path="/dashboard/daftar-harga/edit-harga/:id"
-              exact
-              component={FormPriceList}
-            />
+						{/* Price List Routes */}
+						<Route path="/dashboard/daftar-harga" exact component={PriceList} />
+						<Route
+							path="/dashboard/daftar-harga/tambah-harga"
+							exact
+							component={FormPriceList}
+						/>
+						<Route
+							path="/dashboard/daftar-harga/edit-harga/:id"
+							exact
+							component={FormPriceList}
+						/>
 
-            {/* Website Contact Routes */}
-            <Route
-              path="/dashboard/kontak-website"
-              exact
-              component={Contacts}
-            />
-            <Route
-              path="/dashboard/kontak-website/tambah-kontak"
-              exact
-              component={FormContact}
-            />
-            <Route
-              path="/dashboard/kontak-website/edit-kontak/:id"
-              exact
-              component={FormContact}
-            />
+						{/* Website Contact Routes */}
+						<Route
+							path="/dashboard/kontak-website"
+							exact
+							component={Contacts}
+						/>
+						<Route
+							path="/dashboard/kontak-website/tambah-kontak"
+							exact
+							component={FormContact}
+						/>
+						<Route
+							path="/dashboard/kontak-website/edit-kontak/:id"
+							exact
+							component={FormContact}
+						/>
 
-            {/* About Us Routes */}
-            <Route path="/dashboard/tentang-kami" exact component={AboutUs} />
-            <Route
-              path="/dashboard/tentang-kami/tambah-tentang-kami"
-              exact
-              component={FormAboutUs}
-            />
-            <Route
-              path="/dashboard/tentang-kami/edit-tentang-kami/:id"
-              exact
-              component={FormAboutUs}
-            />
-            <Route
-              path="/dashboard/tentang-kami/edit-foto/:id"
-              exact
-              component={FormPhoto}
-            />
+						{/* About Us Routes */}
+						<Route path="/dashboard/tentang-kami" exact component={AboutUs} />
+						<Route
+							path="/dashboard/tentang-kami/tambah-tentang-kami"
+							exact
+							component={FormAboutUs}
+						/>
+						<Route
+							path="/dashboard/tentang-kami/edit-tentang-kami/:id"
+							exact
+							component={FormAboutUs}
+						/>
+						<Route
+							path="/dashboard/tentang-kami/edit-foto/:id"
+							exact
+							component={FormPhoto}
+						/>
 
-            {/* Mission Routes */}
-            <Route
-              path="/dashboard/tentang-kami/tambah-misi/:id"
-              exact
-              render={(props) => <FormMission {...props} isEdit={false} />}
-            />
-            <Route
-              path="/dashboard/tentang-kami/edit-visi/:id"
-              exact
-              render={(props) => <FormAboutUs {...props} editVisi={true} />}
-            />
-            <Route
-              path="/dashboard/tentang-kami/edit-misi/:id"
-              exact
-              render={(props) => <FormMission {...props} isEdit={true} />}
-            />
+						{/* Mission Routes */}
+						<Route
+							path="/dashboard/tentang-kami/tambah-misi/:id"
+							exact
+							render={(props) => <FormMission {...props} isEdit={false} />}
+						/>
+						<Route
+							path="/dashboard/tentang-kami/edit-visi/:id"
+							exact
+							render={(props) => <FormAboutUs {...props} editVisi={true} />}
+						/>
+						<Route
+							path="/dashboard/tentang-kami/edit-misi/:id"
+							exact
+							render={(props) => <FormMission {...props} isEdit={true} />}
+						/>
 
-            {/* Profile Routes */}
-            <Route path="/dashboard/profile" exact component={Profile} />
+						{/* Profile Routes */}
+						<Route path="/dashboard/profile" exact component={Profile} />
 
-            {/* Artikel Routes */}
-            <Route path="/dashboard/artikel" exact component={Articles} />
-            <Route
-              path="/dashboard/artikel/tambah-artikel"
-              exact
-              component={FormArticle}
-            />
-            <Route
-              path="/dashboard/artikel/edit-artikel/:id"
-              exact
-              component={FormArticle}
-            />
+						{/* Artikel Routes */}
+						<Route path="/dashboard/artikel" exact component={Articles} />
+						<Route
+							path="/dashboard/artikel/tambah-artikel"
+							exact
+							component={FormArticle}
+						/>
+						<Route
+							path="/dashboard/artikel/edit-artikel/:id"
+							exact
+							component={FormArticle}
+						/>
 
-            {/* Brand Settings Routes */}
-            <Route path="/dashboard/brand" exact component={Brand} />
+						{/* Brand Settings Routes */}
+						<Route path="/dashboard/brand" exact component={Brand} />
 
-            {/* Pros Routes */}
-            <Route path="/dashboard/pros" exact component={Pros} />
-            <Route
-              path="/dashboard/pros/tambah-pros"
-              exact
-              component={FormPros}
-            />
-            <Route
-              path="/dashboard/pros/edit-pros/:id"
-              exact
-              component={FormPros}
-            />
+						{/* Pros Routes */}
+						<Route path="/dashboard/pros" exact component={Pros} />
+						<Route
+							path="/dashboard/pros/tambah-pros"
+							exact
+							component={FormPros}
+						/>
+						<Route
+							path="/dashboard/pros/edit-pros/:id"
+							exact
+							component={FormPros}
+						/>
 
-            {/* User Account Routes */}
-            {userLevel === 2 && (
-              <Switch>
-                <Route
-                  path="/dashboard/akun-pengguna"
-                  exact
-                  component={Users}
-                />
-                <Route
-                  path="/dashboard/akun-pengguna/edit-pengguna/:id"
-                  exact
-                  component={FormUser}
-                />
-              </Switch>
-            )}
-            <Route path="*" exact render={() => <Redirect to="/error" />} />
-          </Switch>
-        </main>
-        <Footer />
-      </div>
-    </div>
-  );
+						{/* User Account Routes */}
+						{userLevel === 2 && (
+							<Switch>
+								<Route
+									path="/dashboard/akun-pengguna"
+									exact
+									component={Users}
+								/>
+								<Route
+									path="/dashboard/akun-pengguna/edit-pengguna/:id"
+									exact
+									component={FormUser}
+								/>
+							</Switch>
+						)}
+						<Route path="*" exact render={() => <Redirect to="/error" />} />
+					</Switch>
+				</main>
+				<Footer />
+			</div>
+		</div>
+	);
 };
 
 Layout.propTypes = {
-  sidebarOpened: PropTypes.bool,
-  dispatch: PropTypes.func.isRequired,
+	sidebarOpened: PropTypes.bool,
+	dispatch: PropTypes.func.isRequired,
 };
 
 function mapStateToProps(store) {
-  return {
-    sidebarOpened: store.navigation.sidebarOpened,
-  };
+	return {
+		sidebarOpened: store.navigation.sidebarOpened,
+	};
 }
 
 export default withRouter(connect(mapStateToProps)(Layout));

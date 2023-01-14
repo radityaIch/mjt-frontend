@@ -14,7 +14,7 @@ const PermitDetails = () => {
           to={`/dashboard/surat-jalan/${id}/update-perjalanan`}
           className="btn bg-white fw-light"
         >
-          Update Perjalanan
+          Update Perjalanan (belum selesai)
         </Link>
       </div>
       <TravelForm isEdit />

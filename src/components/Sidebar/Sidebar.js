@@ -61,7 +61,7 @@ const Sidebar = (props) => {
               link: "/dashboard/surat-jalan/dalam-perjalanan",
             },
             {
-              header: "Selesai Perjalanan",
+              header: "Selesai Perjalanan (belum selesai)",
               link: "/dashboard/surat-jalan/selesai",
             },
           ]}

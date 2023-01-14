@@ -210,7 +210,7 @@ const TravelForm = (props) => {
 
                   {props.isEdit ? (
                     <div className="d-flex">
-                      <Link to={`${id}/print`}>
+                      <Link to={`/print/surat-jalan/${id}`} target="_blank">
                         <Button className="rounded-pill mr-3" color="primary">
                           Export ke PDF
                         </Button>

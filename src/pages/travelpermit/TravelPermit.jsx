@@ -76,7 +76,7 @@ const TravelPermit = () => {
               to="/dashboard/surat-jalan/selesai"
               className="btn bg-white fw-light"
             >
-              Selesai Perjalanan
+              Selesai Perjalanan (belum selesai)
             </Link>
           </div>
           <Row className="mb-4">
