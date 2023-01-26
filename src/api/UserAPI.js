@@ -4,6 +4,7 @@ import { config } from "./config";
 export const getLoggedUser = async () => {
   try {
     const res = await axios.get(
+      // https://service.mjt-tlpartner.com/api/
       `http://localhost:8000/api/auth/user`,
       {
         headers: {
@@ -22,6 +23,7 @@ export const getLoggedUser = async () => {
 export const getAllUsers = async () => {
   try {
     const res = await axios.get(
+      // https://service.mjt-tlpartner.com/api/
       `http://localhost:8000/api/auth/users`,
       config
     );
@@ -34,6 +36,7 @@ export const getAllUsers = async () => {
 export const getUserById = async (id) => {
   try {
     const res = await axios.get(
+      // https://service.mjt-tlpartner.com/api/
       `http://localhost:8000/api/auth/user/${id}`,
       config
     );
@@ -46,6 +49,7 @@ export const getUserById = async (id) => {
 export const updateUser = (id, payload) => {
   try {
     const res = axios.post(
+      // https://service.mjt-tlpartner.com/api/
       `http://localhost:8000/api/auth/user/update/${id}`,
       payload,
       config
@@ -59,6 +63,7 @@ export const updateUser = (id, payload) => {
 export const updateProfile = (payload) => {
   try {
     const res = axios.post(
+      // https://service.mjt-tlpartner.com/api/
       `http://localhost:8000/api/auth/user/update`,
       payload,
       config
@@ -72,6 +77,7 @@ export const updateProfile = (payload) => {
 export const deleteUser = (id) => {
   try {
     const res = axios.get(
+      // https://service.mjt-tlpartner.com/api/
       `http://localhost:8000/api/auth/user/delete/${id}`,
       config
     );
@@ -84,6 +90,7 @@ export const deleteUser = (id) => {
 export const verifyUser = (id) => {
   try {
     const res = axios.get(
+      // https://service.mjt-tlpartner.com/api/
       `http://localhost:8000/api/auth/user/verify/${id}`,
       config
     );
@@ -96,6 +103,7 @@ export const verifyUser = (id) => {
 export const sendVerificationCode = (payload) => {
   try {
     const res = axios.post(
+      // https://service.mjt-tlpartner.com/api/
       `http://localhost:8000/api/password/create`,
       payload,
       config
@@ -109,6 +117,7 @@ export const sendVerificationCode = (payload) => {
 export const checkVerificationCode = (token) => {
   try {
     const res = axios.get(
+      // https://service.mjt-tlpartner.com/api/
       `http://localhost:8000/api/password/find/${token}`,
       config
     );
@@ -123,6 +132,7 @@ export const resetPassword = (payload) => {
   delete newPayload.repassword;
   try {
     const res = axios.post(
+      // https://service.mjt-tlpartner.com/api/
       `http://localhost:8000/api/password/reset`,
       newPayload,
       config
@@ -136,6 +146,7 @@ export const resetPassword = (payload) => {
 export const sendVerificationEmail = (payload) => {
   try {
     const res = axios.post(
+      // https://service.mjt-tlpartner.com/api/
       `http://localhost:8000/api/email/verify/resend`,
       payload,
       config

@@ -4,6 +4,7 @@ import { config } from "./config";
 export const getAllTracking = async (id) => {
   try {
     const res = await axios.get(
+      // https://service.mjt-tlpartner.com/api/
       `http://localhost:8000/api/tracking/${id}`,
       config
     );
@@ -16,6 +17,7 @@ export const getAllTracking = async (id) => {
 export const addTracking = async (payload) => {
   try {
     const res = await axios.post(
+      // https://service.mjt-tlpartner.com/api/
       `http://localhost:8000/api/tracking/create`,
       payload,
       config

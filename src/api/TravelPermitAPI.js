@@ -3,6 +3,7 @@ import { config } from "./config";
 
 export const getAllPermit = async () => {
   try {
+    // https://service.mjt-tlpartner.com/api/
     const res = await axios.get("http://localhost:8000/api/permit", config);
     return res.data.data;
   } catch (err) {
@@ -13,6 +14,7 @@ export const getAllPermit = async () => {
 export const getPermitById = async (id) => {
   try {
     const res = await axios.get(
+      // https://service.mjt-tlpartner.com/api/
       `http://localhost:8000/api/permit/${id}`,
       config
     );
@@ -25,6 +27,7 @@ export const getPermitById = async (id) => {
 export const addPermit = async (payload) => {
   try {
     const res = await axios.post(
+      // https://service.mjt-tlpartner.com/api/
       `http://localhost:8000/api/permit/create`,
       payload,
       config
@@ -39,6 +42,7 @@ export const addPermit = async (payload) => {
 export const updatePermit = async (id, payload) => {
   try {
     const res = await axios.post(
+      // https://service.mjt-tlpartner.com/api/
       `http://localhost:8000/api/permit/${id}`,
       payload,
       config
@@ -52,6 +56,7 @@ export const updatePermit = async (id, payload) => {
 export const deletePermit = async (id) => {
   try {
     const res = await axios.delete(
+      // https://service.mjt-tlpartner.com/api/
       `http://localhost:8000/api/permit/${id}`,
       config
     );

@@ -4,6 +4,7 @@ import { config } from "./config";
 export const getAllSupply = async (id) => {
   try {
     const res = await axios.get(
+      // https://service.mjt-tlpartner.com/api/
       `http://localhost:8000/api/supply/${id}`,
       config
     );
@@ -16,6 +17,7 @@ export const getAllSupply = async (id) => {
 export const addSupply = async (payload) => {
   try {
     const res = await axios.post(
+      // https://service.mjt-tlpartner.com/api/
       `http://localhost:8000/api/supply/create`,
       payload,
       config
@@ -30,6 +32,7 @@ export const addSupply = async (payload) => {
 export const updateSupply = async (id, payload) => {
   try {
     const res = await axios.post(
+      // https://service.mjt-tlpartner.com/api/
       `http://localhost:8000/api/supply/item/${id}`,
       payload,
       config
@@ -43,6 +46,7 @@ export const updateSupply = async (id, payload) => {
 export const deleteSupply = async (id) => {
   try {
     const res = await axios.delete(
+      // https://service.mjt-tlpartner.com/api/
       `http://localhost:8000/api/supply/${id}`,
       config
     );
