@@ -133,7 +133,7 @@ const TravelForm = (props) => {
 							const newID = allpermit[0].id;
 
 							Promise.all(
-								permit.barang.map(async (brg) => {
+								goods.map(async (brg) => {
 									const payload = setFormData({
 										travel_permit_id: newID,
 										barang: brg.good_unit,
@@ -141,7 +141,7 @@ const TravelForm = (props) => {
 										keterangan: brg.keterangan,
 									});
 
-									await addSupply(payload).then(async () => {
+									addSupply(payload).then(async () => {
 										const payload = setFormData({
 											travel_permit_id: newID,
 											keterangan: "Masih Dalam Perjalanan",
@@ -171,24 +171,25 @@ const TravelForm = (props) => {
 							const newID = id;
 
 							await deleteSupply(newID).then(async (res) => {
-								if (res.status === 200 || res.status === 201) {
+								if (res.status === 200 || res.status === 201) {									
 									Promise.all(
-										permit.barang.map(async (brg) => {
+										goods.map(async (brg) => {
 											const payload = setFormData({
 												travel_permit_id: newID,
 												barang: brg.good_unit,
 												qty: brg.qty,
 												keterangan: brg.keterangan,
 											});
-											await addSupply(payload).then(async () => {
+											addSupply(payload);
+											/*.then(async () => {
 												const payload = setFormData({
 													travel_permit_id: newID,
 													keterangan: "Masih Dalam Perjalanan",
 													kendala: "Tidak Ada",
 												});
 
-												await addTracking(payload);
-											});
+												// await addTracking(payload);
+											});*/
 										})
 									).then(() => {
 										Swal.close();
@@ -196,7 +197,7 @@ const TravelForm = (props) => {
 										toast(
 											<Notification
 												type="success"
-												message="Surat baru berhasil ditambahkan!"
+												message="Surat berhasil diupdate!"
 												withIcon
 											/>,
 											notificationOptions
@@ -267,7 +268,7 @@ const TravelForm = (props) => {
 
 		if (id) {
 			getPermitData(id);
-		}
+		}		
 	}, [history, id]);
 
 	return (

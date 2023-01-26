@@ -43,7 +43,7 @@ export const updateSupply = async (id, payload) => {
 export const deleteSupply = async (id) => {
   try {
     const res = await axios.delete(
-      `http://localhost:8000/api/supply/item/${id}`,
+      `http://localhost:8000/api/supply/${id}`,
       config
     );
     return res;
