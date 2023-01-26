@@ -38,7 +38,7 @@ export const addPermit = async (payload) => {
 
 export const updatePermit = async (id, payload) => {
   try {
-    const res = await axios.put(
+    const res = await axios.post(
       `http://localhost:8000/api/permit/${id}`,
       payload,
       config

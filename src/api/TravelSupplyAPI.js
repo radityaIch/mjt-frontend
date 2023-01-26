@@ -29,7 +29,7 @@ export const addSupply = async (payload) => {
 
 export const updateSupply = async (id, payload) => {
   try {
-    const res = await axios.put(
+    const res = await axios.post(
       `http://localhost:8000/api/supply/item/${id}`,
       payload,
       config

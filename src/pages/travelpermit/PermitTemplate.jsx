@@ -363,6 +363,7 @@ export default function PermitTemplate() {
 							justifyContent: "space-between",
 							height: 100,
 							paddingHorizontal: 10,
+							paddingVertical: 10,
 						}}
 					>
 						<View style={{ flexBasis: 250 }}>
